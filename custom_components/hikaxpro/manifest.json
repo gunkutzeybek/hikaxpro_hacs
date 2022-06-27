@@ -1,0 +1,14 @@
+{
+    "domain": "hikvision_axpro",
+    "name": "hikvision_axpro",
+    "config_flow": true,
+    "documentation": "https://www.home-assistant.io/integrations/hikvision_axpro",
+    "issue_tracker": "https://github.com/gunkutzeybek/hikaxpro_hacs/issues",
+    "requirements": ["hikaxpro==1.1.1"],
+    "dependencies": [],
+    "codeowners": [
+      "@gunkutzeybek"
+    ],
+    "iot_class": "local_polling",
+    "version": "0.0.1"
+  }
