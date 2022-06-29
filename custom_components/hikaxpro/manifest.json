@@ -4,7 +4,7 @@
     "config_flow": true,
     "documentation": "https://www.home-assistant.io/integrations/hikvision_axpro",
     "issue_tracker": "https://github.com/gunkutzeybek/hikaxpro_hacs/issues",
-    "requirements": ["hikaxpro==1.2.1"],
+    "requirements": ["hikaxpro==1.2.2"],
     "dependencies": [],
     "codeowners": [
       "@gunkutzeybek"
