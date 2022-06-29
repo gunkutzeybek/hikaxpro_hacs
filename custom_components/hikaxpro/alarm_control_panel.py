@@ -34,7 +34,7 @@ class HikAxProPanel(CoordinatorEntity, AlarmControlPanelEntity):
         """Return device info for this device."""
         return DeviceInfo(
             identifiers={(DOMAIN, self.unique_id)},
-            manufacturer="Antifurto365 - Meian",
+            manufacturer="Hikvision - Ax Pro",
             name=self.name,
         )
 
