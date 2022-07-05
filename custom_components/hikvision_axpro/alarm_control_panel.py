@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -23,6 +23,11 @@ async def async_setup_entry(
 
 class HikAxProPanel(CoordinatorEntity, AlarmControlPanelEntity):
     """Representation of Hikvision Ax Pro alarm panel."""
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self.async_write_ha_state()
 
     _attr_supported_features = (
         AlarmControlPanelEntityFeature.ARM_HOME
@@ -53,14 +58,14 @@ class HikAxProPanel(CoordinatorEntity, AlarmControlPanelEntity):
         """Return the state of the device."""
         return self.coordinator.state
 
-    def alarm_disarm(self, code=None):
+    async def async_alarm_disarm(self, code=None):
         """Send disarm command."""
-        self.coordinator.axpro.disarm()
+        await self.coordinator.async_disarm()
 
-    def alarm_arm_home(self, code=None):
+    async def async_alarm_arm_home(self, code=None):
         """Send arm home command."""
-        self.coordinator.axpro.arm_home()
+        await self.coordinator.async_arm_home()
 
-    def alarm_arm_away(self, code=None):
+    async def async_alarm_arm_away(self, code=None):
         """Send arm away command."""
-        self.coordinator.axpro.arm_away()
+        await self.coordinator.async_arm_away()

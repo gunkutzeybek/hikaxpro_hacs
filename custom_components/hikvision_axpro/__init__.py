@@ -73,3 +73,27 @@ class HikAxProDataUpdateCoordinator(DataUpdateCoordinator):
                 await self.hass.async_add_executor_job(self._update_data)
         except ConnectionError as error:
             raise UpdateFailed(error) from error
+
+    async def async_arm_home(self):
+        """Arm alarm panel in home state."""
+        is_success = await self.hass.async_add_executor_job(self.axpro.arm_home)
+
+        if is_success:
+            await self._async_update_data()
+            await self.async_request_refresh()
+
+    async def async_arm_away(self):
+        """Arm alarm panel in away state"""
+        is_success = await self.hass.async_add_executor_job(self.axpro.arm_away)
+
+        if is_success:
+            await self._async_update_data()
+            await self.async_request_refresh()
+
+    async def async_disarm(self):
+        """Disarm alarm control panel."""
+        is_success = await self.hass.async_add_executor_job(self.axpro.disarm)
+
+        if is_success:
+            await self._async_update_data()
+            await self.async_request_refresh()
