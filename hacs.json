@@ -1,7 +1,4 @@
 {
     "name": "Hikvision Ax Pro integration",
-    "render_readme": true,
-    "domains": [
-        "alert_control_panel"
-    ]
+    "render_readme": true
 }
