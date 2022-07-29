@@ -7,12 +7,20 @@ from async_timeout import timeout
 
 from homeassistant.components.alarm_control_panel import SCAN_INTERVAL
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_USERNAME, CONF_PASSWORD, Platform
+from homeassistant.const import (
+    ATTR_CODE_FORMAT,
+    CONF_ENABLED,
+    CONF_HOST,
+    CONF_USERNAME,
+    CONF_PASSWORD,
+    CONF_CODE,
+    Platform,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import DATA_COORDINATOR, DOMAIN
+from .const import DATA_COORDINATOR, DOMAIN, USE_CODE_ARMING
 
 PLATFORMS: list[Platform] = [Platform.ALARM_CONTROL_PANEL]
 _LOGGER = logging.getLogger(__name__)
@@ -23,6 +31,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     host = entry.data[CONF_HOST]
     username = entry.data[CONF_USERNAME]
     password = entry.data[CONF_PASSWORD]
+    use_code = entry.data[CONF_ENABLED]
+    code_format = entry.data[ATTR_CODE_FORMAT]
+    code = entry.data[CONF_CODE]
+    use_code_arming = entry.data[USE_CODE_ARMING]
     axpro = hikaxpro.HikAxPro(host, username, password)
 
     try:
@@ -31,7 +43,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     except (asyncio.TimeoutError, ConnectionError) as ex:
         raise ConfigEntryNotReady from ex
 
-    coordinator = HikAxProDataUpdateCoordinator(hass, axpro, mac)
+    coordinator = HikAxProDataUpdateCoordinator(
+        hass,
+        axpro,
+        mac,
+        use_code,
+        code_format,
+        use_code_arming,
+        code,
+    )
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {DATA_COORDINATOR: coordinator}
 
@@ -51,11 +71,24 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 class HikAxProDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching ax pro data."""
 
-    def __init__(self, hass, axpro, mac):
+    def __init__(
+        self,
+        hass,
+        axpro,
+        mac,
+        use_code,
+        code_format,
+        use_code_arming,
+        code,
+    ):
         self.axpro = axpro
         self.state = None
         self.host = axpro.host
         self.mac = mac
+        self.use_code = use_code
+        self.code_format = code_format
+        self.use_code_arming = use_code_arming
+        self.code = code
 
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
 

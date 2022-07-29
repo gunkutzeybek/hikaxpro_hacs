@@ -1,5 +1,10 @@
 """Constants for the hikvision_axpro integration."""
 
-DOMAIN = "hikvision_axpro"
+from typing import Final
 
-DATA_COORDINATOR = "hikaxpro"
+
+DOMAIN: Final = "hikvision_axpro"
+
+DATA_COORDINATOR: Final = "hikaxpro"
+
+USE_CODE_ARMING: Final = "use_code_arming"
